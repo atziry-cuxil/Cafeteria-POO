@@ -36,10 +36,10 @@ class Producto {
 //Podria crearse la clase tienda 
 
 class Pedido {
+    #producto;
 
     constructor(procducto) {
         this.producto
-
     }
 
     sumar() {
