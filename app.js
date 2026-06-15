@@ -21,7 +21,7 @@ class Producto {
     }
 
     get categoria() {
-        return this.#descripcion;
+        return this.#categoria;
     }
 
     get descripcion() {
@@ -73,6 +73,7 @@ let htmlProducto = ''
 let contador = -1;
 
 let contenedorProductos = document.querySelector('#contenedorProductos')
+let select = document.querySelector('#opciones')
 
 productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)//podria ser un clase tienda.
 
@@ -98,20 +99,41 @@ productos.forEach(object => {
                         </div>
                     </div>
                 </div>`
-})
+})  
 contenedorProductos.innerHTML = htmlProducto
-let botonesAgregar = document.querySelectorAll('.btn')
 let divs = document.querySelectorAll('.hola')
+
+//function renderizado(){
+select.addEventListener('change', (event) => {
+    console.log(event.target.value)
+    contenedorProductos.innerHTML = ""
+    if(event.target.value == "1"){
+        contenedorProductos.innerHTML = htmlProducto
+    }else if(event.target.value == "2"){
+        contenedorProductos.appendChild(divs[0])
+        contenedorProductos.append(divs[1])
+    }else if(event.target.value == "3"){
+        contenedorProductos.appendChild(divs[2])
+        contenedorProductos.append(divs[3])
+    }else if(event.target.value == "4"){
+        contenedorProductos.appendChild(divs[4])
+        contenedorProductos.append(divs[5])
+    }else{
+        contenedorProductos.appendChild(divs[6])
+        contenedorProductos.append(divs[7])
+    }
+})//Podria filtrar con forEach y la categoria
+
+//}
+
+let botonesAgregar = document.querySelectorAll('.btn')
 let pedidosVisuales = document.querySelector('#pedidosVisuales')
-let temporal = 0;
 let nuevoPedido = ''
 let validacion = [];
 
 botonesAgregar.forEach(btn => {
 
     btn.addEventListener('click', (event) => {
-        console.log(event.target)
-        console.log(event)
 
         //llamar a la clsse Pedidos
         //Enviarle el producto (que sera seleccionado conforme la posicion de arreglo)
@@ -140,33 +162,41 @@ botonesAgregar.forEach(btn => {
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="btn-group ">
-                                    <button class="btn btn-outline-danger">
+                                    <button class="btn btn-outline-danger menos">
                                         -
                                     </button>
-                                    <button class="btn btn-outline-secondary">
+                                    <button class="btn btn-outline-secondary cantidad">
                                         1
                                     </button>
-                                    <button class="btn btn-outline-success">
+                                    <button class="btn btn-outline-success mas">
                                         +
                                     </button>
                                 </div>
-                                <button class="btn btn-danger">
+                                <button class="btn btn-danger eliminar">
                                     Eliminar
                                 </button>
                             </div>`
         //Seleccionar botones renderizando
-
         if (!validacion.includes(nuevoPedido)) {
             validacion.push(nuevoPedido)
             pedidosVisuales.innerHTML += nuevoPedido
-
             //llamar Pedidos
-
         }
+let btnEliminar = document.querySelectorAll(".eliminar")
+console.log(btnEliminar)
 
+btnEliminar.forEach(eliminar => {
+    eliminar.addEventListener('click', (event) => {
+        console.log('Hola desde eliminar')
+        event.target.div.remove()
+    })
+})
     })
 
+    
 })
+
+
 
 
 
