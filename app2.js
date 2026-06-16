@@ -53,6 +53,10 @@ class Pedido {
         return this.#resultado;
     }
 
+    // get contador(){
+    //     return this.#contador
+    // }
+
     sumar() {
         this.#resultado = this.#resultado + this.#precio
         return this.#resultado
@@ -89,7 +93,7 @@ class Total {
     #iva; 
     #subtotal;
     constructor(pedidos){
-        this.#arreglo = pedidos
+        this.arreglo = pedidos
         this.#total = 0;
         this.#iva = 0;
         this.#subtotal = 0;
@@ -146,22 +150,23 @@ let pedidosVisuales = document.querySelector('#pedidosVisuales')
 let subTotal = document.querySelector('#SubTotal')
 let iva = document.querySelector('#iva')
 let total = document.querySelector('#Total')
-let confirmarPedido = document.querySelector('confirmar')
+let confirmarPedido = document.querySelector('#confirmar')
 let factura = document.querySelector('#final')
 let input = document.querySelector('#input')
 let totalPagado = document.querySelector('#TotalPagado')
 let lista = document.querySelector('#lista')
 
+let controlcarrito = []
 let productos = [];
 let productosPedido = [];
 let htmlProducto = ''
-let contador = -1;
+let contador = -1;  
+let listas = ''
 
-// let controlcarrito = []
-// controlcarrito.push(carrito1,carrito2,carrito3,carrito4,carrito5,carrito6,carrito7,carrito8)
-// let total = new Total(controlcarrito)
-
+//.push(carrito1,carrito2,carrito3,carrito4,carrito5,carrito6,carrito7,carrito8)
 productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)
+//let Totales = new Total(controlcarrito)
+renderizar(productos)
 
 select.addEventListener('change', (event) => {
     let pintar = [];
@@ -181,10 +186,12 @@ select.addEventListener('change', (event) => {
 })
 input.addEventListener('keyup', (event) => {
    let pintar =  productos.filter(producto => producto.nombre.toLowerCase() == event.target.value.toLowerCase()
-    || producto.nombre.includes(event.target.value.toLowerCase()))
+    || producto.nombre.toLowerCase().includes(event.target.value.toLowerCase()))
    renderizar(pintar)
 })
 function renderizar(productos){
+    contenedorProductos.textContent = " "
+    htmlProducto = " "
     contador = -1;
 productos.forEach(object => {
     contador++
@@ -217,6 +224,8 @@ botonesAgregar.forEach(btn => {
         if (!productosPedido.includes(productos[event.target.id])) {
             productosPedido.push(productos[event.target.id])
             controlPedidos(productosPedido)
+        }else{
+
         }
     })
 })
@@ -228,17 +237,17 @@ function controlPedidos(productosPedidos,) {
     let controlcarrito = [];
     let contador = -1;
     let nuevoPedido = ''
-    let listas = ''
+    listas = " "
     productosPedidos.forEach(instancia => {
         let carrito = new Pedido(instancia)
-        lista += `<p>${instancia.nombre} = ${Total.subtotal}`
+        listas += `<p>${instancia.nombre} = ${instancia.resultado} </p>`
         controlcarrito.push(carrito)
         contador++
         nuevoPedido = `<div id="${contador}" class="border rounded p-3 mb-3 pedido">
                             <div class="d-flex justify-content-between flex-column">
                                 <h6 name="name"> ${instancia.nombre}</h6>
-                                <span id="sub">Precio Unitario:${instancia.precio}  00</span>
-                                <span>Subtotal: </span>
+                                <span>Precio Unitario:${instancia.precio}. 00</span>
+                                <span id="sub">Subtotal:${instancia.precio}</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="btn-group">
@@ -256,63 +265,40 @@ function controlPedidos(productosPedidos,) {
                                     Eliminar
                                 </button>
                             </div>`
-
-    })
-
     pedidosVisuales.innerHTML += nuevoPedido
 
-    let btnmenos = document.querySelectorAll('.menos')
-    let btnmas = document.querySelectorAll('.mas')
-    let btncantidad = document.querySelectorAll('.cantidad')
+    })
     let btnEliminar = document.querySelectorAll('.eliminar')
-    let sub = document.querySelectorAll('#sub')
-    let carrito = new Pedido(producto1)
 
-    for(let i = 0; i < btnmenos.length; i++){
-        btnmenos[i].addEventListener('click', (event) => {
-                 console.log('menos')
-                controlcarrito[i].disminuir()
-                btncantidad[i].textContent = controlcarrito[i].contador  
-                sub[i].textContent = `Subtotal: ${controlcarrito[i].restar()}`  //renderizar cuando el valor cambie      
-        })
-        btnmas.addEventListener('click', (event) => {
-            console.log('mas')
-            controlcarrito[i].aumentar()
-            btncantidad[i].textContent = controlcarrito[i].contador
-            sub[i].textContent = `Subtotal: ${controlcarrito[i].sumar()}`//renderizr cuando el valor cambie
-        })
+    // let btnmenos = document.querySelectorAll('.menos')
+    // let btnmas = document.querySelectorAll('.mas')
+    // let btncantidad = document.querySelectorAll('.cantidad')
+    // let sub = document.querySelectorAll('#sub')
+    //let carrito = new Pedido(producto1)
 
-        btnEliminar[i].addEventListener('click', (event) => {
+    btnEliminar.forEach(btn => {
+        btn.addEventListener('click', (event) => {
             let indice = event.target.id
-            console.log(event.target.id)
             productosPedido.splice(indice, 1)
             controlPedidos(productosPedido)
             console.log('hola')
-        })
-    }
+        })        
+    })
+
     controlTotal(controlcarrito)
+    console.log('hola')
 }
 
 function controlTotal(arreglo){
-    let Total = new Total(arreglo)
-    subTotal.textContent = Total.total
-    iva.textContent = Total.iva
-    total.textContent = Total.total
+    let Totales = new Total(arreglo)
+    subTotal.textContent = Totales.total
+    iva.textContent = Totales.iva
+    total.textContent = Totales.total
 }
 
 confirmarPedido.addEventListener('click', (event) => {
-    confirmarPedido.disabled
+    confirmarPedido.disabled = true;
     factura.classList.remove('d-none')
-    totalPagado.textContent = `Q${Total.total}`
-    lista.innerHTML = listas
+    totalPagado.textContent = `Q ${Totales.total}`
+    lista.innerHTML = listas        
 })
-
-
-
-
-
-
-
-
-
-
