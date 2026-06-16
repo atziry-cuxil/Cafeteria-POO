@@ -229,10 +229,20 @@ botonesAgregar.forEach(btn => {
         }
     })
 })
-
+    if(productosPedido.length == 0){
+        confirmarPedido.disabled = true;
+    }else{
+        confirmarPedido.disabled = false;
+    }
 }
 
 function controlPedidos(productosPedidos,) {
+    //factura.classList.add('d-none')
+    if(productosPedidos.length == 0){
+        confirmarPedido.disabled = true;
+     }else{
+        confirmarPedido.disabled = false;
+    }
     pedidosVisuales.textContent = ''
     let controlcarrito = [];
     let contador = -1;
@@ -280,25 +290,40 @@ function controlPedidos(productosPedidos,) {
         btn.addEventListener('click', (event) => {
             let indice = event.target.id
             productosPedido.splice(indice, 1)
+
             controlPedidos(productosPedido)
             console.log('hola')
         })        
     })
 
-    controlTotal(controlcarrito)
-    console.log('hola')
-}
-
-function controlTotal(arreglo){
-    let Totales = new Total(arreglo)
+    let Totales = new Total(controlcarrito)
     subTotal.textContent = Totales.total
     iva.textContent = Totales.iva
     total.textContent = Totales.total
-}
+    //controlTotal(controlcarrito)
+    //console.log('hola')
 
 confirmarPedido.addEventListener('click', (event) => {
     confirmarPedido.disabled = true;
     factura.classList.remove('d-none')
     totalPagado.textContent = `Q ${Totales.total}`
     lista.innerHTML = listas        
+})    
+}
+
+pedidosVisuales.addEventListener('click', (event) => {
+    console.log(event.target.textContent)
+    if(event.target.textContent == "+"){
+
+    }else if(event.target.textContent == "-"){
+
+    }
 })
+
+
+// function controlTotal(arreglo){
+//     let Totales = new Total(arreglo)
+//     subTotal.textContent = Totales.total
+//     iva.textContent = Totales.iva
+//     total.textContent = Totales.total
+// }
