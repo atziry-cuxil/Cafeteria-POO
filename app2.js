@@ -13,7 +13,7 @@ class Producto {
         this.#categoria = categoria
         this.#descripcion = descripcion
         this.#imagen = url
-        this.#contador = -1
+        this.#contador = 1;
         this.#resultado = this.#precio
     }
 
@@ -40,12 +40,16 @@ class Producto {
     get resultado() {
         return this.#resultado
     }
-    sumar() {
+
+    get contador() {
+        return this.#contador
+    }
+    sumarSubtotal() {
         this.#resultado = this.#resultado + this.#precio
         return this.#resultado
     }
 
-    restar() {
+    restarSubtotal() {
         if (this.#contador != 0) {
             this.#resultado = this.#resultado - this.#precio;
         } else {
@@ -54,15 +58,20 @@ class Producto {
         return this.#resultado
     }
 
-    disminuir() {
+    disminuirCantidad() {
         if (this.#contador != 0) {
             this.#contador--
         }
         return this.#contador
     }
-    aumentar() {
+    aumentarCantidad() {
         //this.#contador++
         return this.#contador++
+    }
+
+    limpiarProducto() {
+        this.#contador = 1;
+        this.#resultado = this.#precio
     }
 }
 
@@ -91,13 +100,9 @@ class Pedido {
         return this.#subtotal
     }
 
-    get productosCarrito(){
+    get productosCarrito() {
         return this.#productosCarrito
     }
-
-    // set productosCarrito (value){
-    //     this.#productosCarrito = value
-    // }
 
     eliminarProducto(indice) {
         this.#productosCarrito.splice(indice, 1)
@@ -106,11 +111,9 @@ class Pedido {
     }
 
     agregarProducto(producto) {
-
         let temporal = producto
         this.#productosCarrito.push(temporal)
         return this.#productosCarrito
-
     }
 
     totalProductos() {
@@ -118,7 +121,7 @@ class Pedido {
         for (let i = 0; i < this.#productosCarrito.length; i++) {
             this.#total += this.#productosCarrito[i].resultado
         }
-        return this.#total            
+        return this.#total
     }
 
     subtotal() {
@@ -128,16 +131,18 @@ class Pedido {
     }
 
     calcularIva() {
-        let impuesto = this.#total * 5
-        this.#iva = impuesto / this.#total
+        this.#iva = this.#total / 5
         return this.#iva
     }
 
     carritoPintar() {
         return this.#productosCarrito
     }
-}
 
+    reiniciar(){
+        return this.#productosCarrito = [];
+    }
+}
 
 let producto1 = new Producto("Café Americano", 12, 'Bebida caliente', 'Cafe negro tradicional', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn8ZP8CVkVsfh1js6RyGlG9XSm3ln_jZxCQQ&s')
 let producto2 = new Producto('Cafe Latte', 10, 'Bebida caliente', 'Cafe con leche espumada', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwgW1tj5A9REAeaFZBs8NVRY8UN64rlDPgdQ&s')
@@ -160,6 +165,8 @@ let factura = document.querySelector('#final')
 let input = document.querySelector('#input')
 let totalPagado = document.querySelector('#TotalPagado')
 let lista = document.querySelector('#lista')
+let borrar = document.querySelector('#borrar')
+let resumen = document.querySelector('#resumen')
 
 let controlcarrito = []
 let productos = [];
@@ -223,11 +230,16 @@ function renderizar(productospintar) {
 
     botonesAgregar.forEach(btn => {
         btn.addEventListener('click', (event) => {
-            let indice = event.target.id
+            let indice = parseInt(event.target.id)
+
             if (!carrito.productosCarrito.includes(productos[indice])) {
-
+                productos[indice].limpiarProducto()
                 carrito.agregarProducto(productos[indice])
-
+                controlPedidos(carrito.carritoPintar())
+            } else {
+                let temporal2 = carrito.productosCarrito.findIndex(producto => producto.nombre == productos[indice].nombre)
+                carrito.productosCarrito[temporal2].aumentarCantidad()
+                carrito.productosCarrito[temporal2].sumarSubtotal()
                 controlPedidos(carrito.carritoPintar())
             }
         })
@@ -241,30 +253,30 @@ function renderizar(productospintar) {
 }
 
 function controlPedidos(productosPedidos,) {
-    console.log(productosPedidos)
     if (productosPedidos.length == 0) {
         confirmarPedido.disabled = true;
     } else {
         confirmarPedido.disabled = false;
     }
+    resumen.classList.remove('d-none')
     pedidosVisuales.textContent = ' '
     let contador = -1;
     let nuevoPedido = ''
     listas = " "
     productosPedidos.forEach(instancia => {
-        listas += `<p>${instancia.nombre} = ${instancia.resultado} </p>`
+        listas += `<p>${instancia.nombre} X ${instancia.contador} = Q${instancia.resultado} .00</p>`
         contador++
         nuevoPedido = `<div id="${contador}" class="border rounded p-3 mb-3 pedido">
                             <div class="d-flex justify-content-between flex-column">
                                 <h6 name="name"> ${instancia.nombre}</h6>
-                                <span>Precio Unitario:${instancia.precio}. 00</span>
-                                <span id="sub">Subtotal:${instancia.precio}</span>
+                                <span>Precio Unitario:Q${instancia.precio}. 00</span>
+                                <span id="sub">Subtotal:Q${instancia.resultado} .00</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="btn-group">
                                     <button id="${contador}" class="btn btn-outline-danger menos">-</button>
                                     <button id="${contador}" class="btn btn-outline-secondary cantidad">
-                                        1
+                                        ${instancia.contador}
                                     </button>
                                     <button id="${contador} "class="btn btn-outline-success mas">+</button>
                                 </div>
@@ -276,6 +288,7 @@ function controlPedidos(productosPedidos,) {
 
     })
     let btnEliminar = document.querySelectorAll('.eliminar')
+    let sub = document.querySelector('#sub')
 
     btnEliminar.forEach(btn => {
         btn.addEventListener('click', (event) => {
@@ -285,29 +298,41 @@ function controlPedidos(productosPedidos,) {
         })
     })
 
-    subTotal.textContent = carrito.subtotal()
-    iva.textContent = carrito.calcularIva()
-    total.textContent = carrito.totalProductos()
+    subTotal.textContent = `Q ${carrito.subtotal()}.00`
+    iva.textContent = `Q ${carrito.calcularIva()}.00`
+    total.textContent = `Q ${carrito.totalProductos()}.00`
 
     confirmarPedido.addEventListener('click', (event) => {
+        subTotal.textContent = `Q 0.00`
+        iva.textContent = `Q 0.00`
+        total.textContent = `Q 0.00`
         confirmarPedido.disabled = true;
-        factura.classList.remove('d-none')
         totalPagado.textContent = `Q ${carrito.total}`
         lista.innerHTML = listas
-        renderizar(productos)
         pedidosVisuales.textContent = ' '
-    })
-
-    pedidosVisuales.addEventListener('click', (event) => {
-        let indice = event.target.id
-        console.log(indice)
-
-        if(event.target.textContent == "+"){
-            
-            //carrito.productosCarrito[indice].aumentar()
-        }else if(event.target.textContent == "-"){
-            console.log('hola mundo')
-        }
+        factura.classList.remove('d-none')
+        renderizar(productos)
+        resumen.classList.add('d-none')
+        carrito.reiniciar()
     })
 }
+pedidosVisuales.addEventListener('click', (event) => {
+    let id = parseInt(event.target.id)
+    if (event.target.textContent == "+") {
 
+        carrito.productosCarrito[id].aumentarCantidad()
+        carrito.productosCarrito[id].sumarSubtotal()
+        controlPedidos(carrito.carritoPintar())
+
+    } else if (event.target.textContent == "-") {
+
+        carrito.productosCarrito[id].disminuirCantidad()
+        carrito.productosCarrito[id].restarSubtotal()
+        controlPedidos(carrito.carritoPintar())
+    }
+
+})
+
+borrar.addEventListener('click', (event) => {
+    factura.classList.add('d-none')
+})

@@ -13,7 +13,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">
+            <span class="navbar-brand mb-0 h1 fs-1">
                 ☕ Cafetería POO
             </span>
         </div>
@@ -27,16 +27,16 @@
                         <h4 class="mb-0">Menú de Productos</h4>
                     </div>
                     <div class="w-100 d-flex">
-                    <select id="opciones" class="form-select form-select-sm w-50 text-center"
-                        aria-label="Small select example">
-                        <option value="1" selected>Open this select menu</option>
-                        <option value="1">Todas</option>
-                        <option value="2">Bebidas calientes</option>
-                        <option value="3">Bebidas Frias</option>
-                        <option value="4">Postres</option>
-                        <option value="5">Comida</option>
-                    </select>
-                    <input id="input" class="w-50" type="text" placeholder="Busqueda de alimentos y bebidas">                        
+                        <select id="opciones" class="form-select form-select-sm w-50 text-center"
+                            aria-label="Small select example">
+                            <option value="1" selected>Open this select menu</option>
+                            <option value="1">Todas</option>
+                            <option value="2">Bebidas calientes</option>
+                            <option value="3">Bebidas Frias</option>
+                            <option value="4">Postres</option>
+                            <option value="5">Comida</option>
+                        </select>
+                        <input id="input" class="w-50" type="text" placeholder="Busqueda de alimentos y bebidas">
                     </div>
                     <div class="card-body">
                         <div id="contenedorProductos" class="row g-3">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <!-- TOTALES -->
-                <div class="card shadow-sm">
+                <div id="resumen" class="card shadow-sm">
                     <div class="card-header bg-dark text-white">
                         <h4 class="mb-0">Resumen</h4>
                     </div>
@@ -84,24 +84,24 @@
                 </div>
                 <!--nota final-->
                 <div id="final" class="card shadow-sm mt-3 d-none">
-                    <div class="card-header bg-dark text-white">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between">
                         <h4 class="mb-0">Pedido Finalizado</h4>
+                        <button id="borrar" class=" btn btn-danger text-white">X</button>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Productos:</span>
+                            <span class="fs-5">Productos:</span>
                             <div id="lista">
 
                             </div>
                         </div>
                         <div class="d-flex justify-content-between flex-column mb-2">
-                            <span>Total pagado:</span>
-                            <strong id="TotalPagado">Q .00</strong>
-                            <p> 
-                                <strong>Gracias por su compra</strong>
+                            <span class="fs-5">Total pagado:</span>
+                            <strong id="TotalPagado" class="fs-5">Q .00</strong>
+                            <p>
+                                <strong class="fs-5">Gracias por su compra!!!</strong>
                             </p>
                         </div>
-                        <hr>
                     </div>
                 </div>
 
