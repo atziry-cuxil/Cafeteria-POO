@@ -6,8 +6,9 @@ class Producto {
     #imagen; //url
     #resultado;
     #contador;
+    #id;
 
-    constructor(nombre, precio, categoria, descripcion, url) {
+    constructor(nombre, precio, categoria, descripcion, url,id) {
         this.#nombre = nombre
         this.#precio = precio
         this.#categoria = categoria
@@ -15,6 +16,7 @@ class Producto {
         this.#imagen = url
         this.#contador = 1;
         this.#resultado = this.#precio
+        this.#id = id
     }
 
     get nombre() {
@@ -44,22 +46,26 @@ class Producto {
     get contador() {
         return this.#contador
     }
+
+    get id(){
+        return this.#id
+    }
     sumarSubtotal() {
         this.#resultado = this.#resultado + this.#precio
         return this.#resultado
     }
 
     restarSubtotal() {
-        if (this.#contador != 0) {
+        if (this.#contador != 1) {
             this.#resultado = this.#resultado - this.#precio;
         } else {
-            this.#resultado = 0
+            this.#resultado = this.#precio
         }
         return this.#resultado
     }
 
     disminuirCantidad() {
-        if (this.#contador != 0) {
+        if (this.#contador != 1) {
             this.#contador--
         }
         return this.#contador
@@ -127,31 +133,31 @@ class Pedido {
     subtotal() {
         this.#subtotal = 0;
         this.#subtotal = this.totalProductos() - this.calcularIva()
-        return this.#subtotal
+        return this.#subtotal.toFixed(2)
     }
 
     calcularIva() {
-        this.#iva = this.#total / 5
-        return this.#iva
+        this.#iva = this.#total * 0.05
+        return this.#iva.toFixed(2)
     }
 
     carritoPintar() {
         return this.#productosCarrito
     }
 
-    reiniciar(){
+    reiniciar() {
         return this.#productosCarrito = [];
     }
 }
 
-let producto1 = new Producto("Café Americano", 12, 'Bebida caliente', 'Cafe negro tradicional', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn8ZP8CVkVsfh1js6RyGlG9XSm3ln_jZxCQQ&s')
-let producto2 = new Producto('Cafe Latte', 10, 'Bebida caliente', 'Cafe con leche espumada', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwgW1tj5A9REAeaFZBs8NVRY8UN64rlDPgdQ&s')
-let producto3 = new Producto('Frappe de Chocolate', 25, 'Bebida fria', 'Bebida fria con chocolate y crema', 'https://images.aws.nestle.recipes/original/2024_10_28T11_04_59_badun_images.badun.es_82c0d9edbe53_frapuccino_de_chocolate.jpg')
-let producto4 = new Producto('Smoothie de Fresa', 22, 'Bebida fria', 'Batido natural de fresa', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBQTuHbjg4tZXMSy4sx1wP_E8L0YJR95lBZw&s')
-let producto5 = new Producto('Muffin de Vainilla', 15, 'Postre', 'Pan dulce suave de vainilla', 'https://cdn.recetasderechupete.com/wp-content/uploads/2026/02/cupcakes-de-vainilla-especial-Carnaval-portada.png')
-let producto6 = new Producto('Cheesecake', 20, 'Postre', 'Pastel frio de queso', 'https://static.eldiario.es/clip/943f6789-e20e-46de-8092-f2d6fbe4a9dd_16-9-discover-aspect-ratio_default_0.jpg')
-let producto7 = new Producto('Sandwich de Pollo', 30, 'Comida', 'Sandwich de Pollo', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUd4qbDF_S2hTJp2PoD2qNcXOHszaLpbcFKg&s')
-let producto8 = new Producto('Bagel con Queso', 20, 'Comida', 'Bagel tostado con queso crema', 'https://images.freeimages.com/images/premium/previews/2234/22348026-bagel-with-cream-cheese.jpg')
+let producto1 = new Producto("Café Americano", 12, 'Bebida caliente', 'Cafe negro tradicional', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn8ZP8CVkVsfh1js6RyGlG9XSm3ln_jZxCQQ&s',0)
+let producto2 = new Producto('Cafe Latte', 10, 'Bebida caliente', 'Cafe con leche espumada', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwgW1tj5A9REAeaFZBs8NVRY8UN64rlDPgdQ&s',1)
+let producto3 = new Producto('Frappe de Chocolate', 25, 'Bebida fria', 'Bebida fria con chocolate y crema', 'https://images.aws.nestle.recipes/original/2024_10_28T11_04_59_badun_images.badun.es_82c0d9edbe53_frapuccino_de_chocolate.jpg',2)
+let producto4 = new Producto('Smoothie de Fresa', 22, 'Bebida fria', 'Batido natural de fresa', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBQTuHbjg4tZXMSy4sx1wP_E8L0YJR95lBZw&s',3)
+let producto5 = new Producto('Muffin de Vainilla', 15, 'Postre', 'Pan dulce suave de vainilla', 'https://cdn.recetasderechupete.com/wp-content/uploads/2026/02/cupcakes-de-vainilla-especial-Carnaval-portada.png',4)
+let producto6 = new Producto('Cheesecake', 20, 'Postre', 'Pastel frio de queso', 'https://static.eldiario.es/clip/943f6789-e20e-46de-8092-f2d6fbe4a9dd_16-9-discover-aspect-ratio_default_0.jpg',5)
+let producto7 = new Producto('Sandwich de Pollo', 30, 'Comida', 'Sandwich de Pollo', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUd4qbDF_S2hTJp2PoD2qNcXOHszaLpbcFKg&s',6)
+let producto8 = new Producto('Bagel con Queso', 20, 'Comida', 'Bagel tostado con queso crema', 'https://images.freeimages.com/images/premium/previews/2234/22348026-bagel-with-cream-cheese.jpg',7)
 let carrito = new Pedido()
 
 let contenedorProductos = document.querySelector('#contenedorProductos')
@@ -202,6 +208,11 @@ function renderizar(productospintar) {
     contenedorProductos.textContent = " "
     htmlProducto = " "
     contador = -1;
+    if (carrito.productosCarrito.length == 0) {
+        confirmarPedido.disabled = true;
+    } else {
+        confirmarPedido.disabled = false;
+    }
     productospintar.forEach(object => {
         contador++
         htmlProducto += `<div id="${contador}" class="col-md-6 hola">
@@ -217,7 +228,7 @@ function renderizar(productospintar) {
                                 <span class="fw-bold text-success">
                                     Q.${object.precio}
                                 </span>
-                                <button id="${contador}" class="btn btn-dark">
+                                <button id="${contador}" class="btn btn-dark agregar">
                                     Agregar
                                 </button>
                             </div>
@@ -226,14 +237,14 @@ function renderizar(productospintar) {
                 </div>`
     })
     contenedorProductos.innerHTML = htmlProducto
-    let botonesAgregar = document.querySelectorAll('.btn')
+    let botonesAgregar = document.querySelectorAll('.agregar')
 
     botonesAgregar.forEach(btn => {
         btn.addEventListener('click', (event) => {
             let indice = parseInt(event.target.id)
-
-            if (!carrito.productosCarrito.includes(productos[indice])) {
-                productos[indice].limpiarProducto()
+            let temporal = porducto.findIndex(porducto => producto.id == indice)
+            if (!carrito.productosCarrito.includes(temporal)) {
+                //productos[indice].limpiarProducto()
                 carrito.agregarProducto(productos[indice])
                 controlPedidos(carrito.carritoPintar())
             } else {
@@ -242,14 +253,11 @@ function renderizar(productospintar) {
                 carrito.productosCarrito[temporal2].sumarSubtotal()
                 controlPedidos(carrito.carritoPintar())
             }
+
         })
 
     })
-    if (productosPedido.length == 0) {
-        confirmarPedido.disabled = true;
-    } else {
-        confirmarPedido.disabled = false;
-    }
+
 }
 
 function controlPedidos(productosPedidos,) {
@@ -258,7 +266,8 @@ function controlPedidos(productosPedidos,) {
     } else {
         confirmarPedido.disabled = false;
     }
-    resumen.classList.remove('d-none')
+    //resumen.classList.remove('d-none')
+    factura.classList.add('d-none')
     pedidosVisuales.textContent = ' '
     let contador = -1;
     let nuevoPedido = ''
@@ -269,8 +278,8 @@ function controlPedidos(productosPedidos,) {
         nuevoPedido = `<div id="${contador}" class="border rounded p-3 mb-3 pedido">
                             <div class="d-flex justify-content-between flex-column">
                                 <h6 name="name"> ${instancia.nombre}</h6>
-                                <span>Precio Unitario:Q${instancia.precio}. 00</span>
-                                <span id="sub">Subtotal:Q${instancia.resultado} .00</span>
+                                <span>Precio Unitario:Q${instancia.precio}.00</span>
+                                <span id="sub">Subtotal:Q${instancia.resultado}.00</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="btn-group">
@@ -293,14 +302,15 @@ function controlPedidos(productosPedidos,) {
     btnEliminar.forEach(btn => {
         btn.addEventListener('click', (event) => {
             let indice = event.target.id
+            carrito.productosCarrito[indice].limpiarProducto()
             carrito.eliminarProducto(indice)
             controlPedidos(carrito.carritoPintar())
         })
     })
 
-    subTotal.textContent = `Q ${carrito.subtotal()}.00`
-    iva.textContent = `Q ${carrito.calcularIva()}.00`
-    total.textContent = `Q ${carrito.totalProductos()}.00`
+    subTotal.textContent = `Q ${carrito.subtotal()}`
+    iva.textContent = `Q ${carrito.calcularIva()}`
+    total.textContent = `Q ${carrito.totalProductos()}`
 
     confirmarPedido.addEventListener('click', (event) => {
         subTotal.textContent = `Q 0.00`
@@ -312,7 +322,8 @@ function controlPedidos(productosPedidos,) {
         pedidosVisuales.textContent = ' '
         factura.classList.remove('d-none')
         renderizar(productos)
-        resumen.classList.add('d-none')
+        //resumen.classList.add('d-none')
+        productos.forEach(producto => producto.limpiarProducto())
         carrito.reiniciar()
     })
 }
