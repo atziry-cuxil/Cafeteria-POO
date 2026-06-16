@@ -4,6 +4,8 @@ class Producto {
     #categoria; //"Bebida caliente",
     #descripcion; //"Café negro tradicional"
     #imagen; //url
+    #resultado;
+    #contador;
 
     constructor(nombre, precio, categoria, descripcion, url) {
         this.#nombre = nombre
@@ -11,7 +13,10 @@ class Producto {
         this.#categoria = categoria
         this.#descripcion = descripcion
         this.#imagen = url
+        this.#contador = -1
+        this.#resultado = this.#precio
     }
+
     get nombre() {
         return this.#nombre;
     }
@@ -31,32 +36,10 @@ class Producto {
     get imagen() {
         return this.#imagen;
     }
-}
-
-class Pedido {
-    //#producto;
-    #precio;
-    #resultado;
-    #contador;
-
-    constructor(producto) {
-        this.producto = producto
-        this.#precio = this.producto.precio
-        this.#resultado = this.producto.precio;//subtotal
-        this.#contador = 1;//cantidad
-    }
-    get precio() {
-        return this.#precio
-    }
 
     get resultado() {
-        return this.#resultado;
+        return this.#resultado
     }
-
-    // get contador(){
-    //     return this.#contador
-    // }
-
     sumar() {
         this.#resultado = this.#resultado + this.#precio
         return this.#resultado
@@ -78,53 +61,83 @@ class Pedido {
         return this.#contador
     }
     aumentar() {
-        this.#contador++
-        return this.#contador
-    }
-
-    eliminar() {
-        this.#contador = 0;
-        this.#resultado = 0;
+        //this.#contador++
+        return this.#contador++
     }
 }
 
-class Total {
+class Pedido {
     #total;
-    #iva; 
+    #iva;
     #subtotal;
-    constructor(pedidos){
-        this.arreglo = pedidos
+    #productosCarrito;
+
+    constructor() {
+        this.#productosCarrito = [];
         this.#total = 0;
         this.#iva = 0;
         this.#subtotal = 0;
     }
-    
-    get total(){
+
+    get total() {
         return this.#total
     }
 
-    get iva (){
+    get iva() {
         return this.#iva
     }
 
-    totalProductos(){
-        for(let i = 0; i < this.arreglo.length; i++){
-            this.#total += this.arreglo[i].resultado
-        }
-        return this.#total
-    }
-
-    subtotal(){
-        this.#subtotal = this.totalProductos()-this.calcularIva()
+    get subtotal() {
         return this.#subtotal
     }
 
-    calcularIva(){
-        let porcentaje = 100 / this.#total
-        this.#iva = porcentaje * 5
+    get productosCarrito(){
+        return this.#productosCarrito
+    }
+
+    // set productosCarrito (value){
+    //     this.#productosCarrito = value
+    // }
+
+    eliminarProducto(indice) {
+        this.#productosCarrito.splice(indice, 1)
+        this.#total = 0;
+        return this.#productosCarrito
+    }
+
+    agregarProducto(producto) {
+
+        let temporal = producto
+        this.#productosCarrito.push(temporal)
+        return this.#productosCarrito
+
+    }
+
+    totalProductos() {
+        this.#total = 0;
+        for (let i = 0; i < this.#productosCarrito.length; i++) {
+            this.#total += this.#productosCarrito[i].resultado
+        }
+        return this.#total            
+    }
+
+    subtotal() {
+        this.#subtotal = 0;
+        this.#subtotal = this.totalProductos() - this.calcularIva()
+        return this.#subtotal
+    }
+
+    calcularIva() {
+        let impuesto = this.#total * 5
+        this.#iva = impuesto / this.#total
         return this.#iva
     }
+
+    carritoPintar() {
+        return this.#productosCarrito
+    }
 }
+
 
 let producto1 = new Producto("Café Americano", 12, 'Bebida caliente', 'Cafe negro tradicional', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn8ZP8CVkVsfh1js6RyGlG9XSm3ln_jZxCQQ&s')
 let producto2 = new Producto('Cafe Latte', 10, 'Bebida caliente', 'Cafe con leche espumada', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwgW1tj5A9REAeaFZBs8NVRY8UN64rlDPgdQ&s')
@@ -134,15 +147,7 @@ let producto5 = new Producto('Muffin de Vainilla', 15, 'Postre', 'Pan dulce suav
 let producto6 = new Producto('Cheesecake', 20, 'Postre', 'Pastel frio de queso', 'https://static.eldiario.es/clip/943f6789-e20e-46de-8092-f2d6fbe4a9dd_16-9-discover-aspect-ratio_default_0.jpg')
 let producto7 = new Producto('Sandwich de Pollo', 30, 'Comida', 'Sandwich de Pollo', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUd4qbDF_S2hTJp2PoD2qNcXOHszaLpbcFKg&s')
 let producto8 = new Producto('Bagel con Queso', 20, 'Comida', 'Bagel tostado con queso crema', 'https://images.freeimages.com/images/premium/previews/2234/22348026-bagel-with-cream-cheese.jpg')
-
-// let carrito1 = new Pedido(producto1)
-// let carrito2 = new Pedido(producto2)
-// let carrito3 = new Pedido(producto3)
-// let carrito4 = new Pedido(producto4)
-// let carrito5 = new Pedido(producto5)
-// let carrito6 = new Pedido(producto6)
-// let carrito7 = new Pedido(producto7)
-// let carrito8 = new Pedido(producto8)
+let carrito = new Pedido()
 
 let contenedorProductos = document.querySelector('#contenedorProductos')
 let select = document.querySelector('#opciones')
@@ -160,42 +165,39 @@ let controlcarrito = []
 let productos = [];
 let productosPedido = [];
 let htmlProducto = ''
-let contador = -1;  
+let contador = -1;
 let listas = ''
 
-//.push(carrito1,carrito2,carrito3,carrito4,carrito5,carrito6,carrito7,carrito8)
 productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)
-//let Totales = new Total(controlcarrito)
 renderizar(productos)
 
 select.addEventListener('change', (event) => {
     let pintar = [];
-    if(event.target.value == "1"){
+    if (event.target.value == "1") {
         pintar = productos
-    }else if(event.target.value == "2"){
-    pintar = productos.filter(producto => producto.categoria == "Bebida caliente")
-
-    }else if(event.target.value == "3"){
+    } else if (event.target.value == "2") {
+        pintar = productos.filter(producto => producto.categoria == "Bebida caliente")
+    } else if (event.target.value == "3") {
         pintar = productos.filter(producto => producto.categoria == 'Bebida fria')
-    }else if(event.target.value == "4"){
+    } else if (event.target.value == "4") {
         pintar = productos.filter(producto => producto.categoria == "Postre")
-    }else{
+    } else {
         pintar = productos.filter(producto => producto.categoria == "Comida")
     }
     renderizar(pintar)
 })
 input.addEventListener('keyup', (event) => {
-   let pintar =  productos.filter(producto => producto.nombre.toLowerCase() == event.target.value.toLowerCase()
-    || producto.nombre.toLowerCase().includes(event.target.value.toLowerCase()))
-   renderizar(pintar)
+    let pintar = productos.filter(producto => producto.nombre.toLowerCase() == event.target.value.toLowerCase()
+        || producto.nombre.toLowerCase().includes(event.target.value.toLowerCase()))
+    renderizar(pintar)
 })
-function renderizar(productos){
+function renderizar(productospintar) {
     contenedorProductos.textContent = " "
     htmlProducto = " "
     contador = -1;
-productos.forEach(object => {
-    contador++
-    htmlProducto += `<div id="${contador}" class="col-md-6 hola">
+    productospintar.forEach(object => {
+        contador++
+        htmlProducto += `<div id="${contador}" class="col-md-6 hola">
                     <div class="card card-producto h-100">
                         <img src="${object.imagen}" class="w-100 h-100">
                         <div class="card-body">
@@ -215,43 +217,42 @@ productos.forEach(object => {
                         </div>
                     </div>
                 </div>`
-})
-contenedorProductos.innerHTML = htmlProducto    
-let botonesAgregar = document.querySelectorAll('.btn')
-
-botonesAgregar.forEach(btn => {
-    btn.addEventListener('click', (event) => {
-        if (!productosPedido.includes(productos[event.target.id])) {
-            productosPedido.push(productos[event.target.id])
-            controlPedidos(productosPedido)
-        }else{
-
-        }
     })
-})
-    if(productosPedido.length == 0){
+    contenedorProductos.innerHTML = htmlProducto
+    let botonesAgregar = document.querySelectorAll('.btn')
+
+    botonesAgregar.forEach(btn => {
+        btn.addEventListener('click', (event) => {
+            let indice = event.target.id
+            if (!carrito.productosCarrito.includes(productos[indice])) {
+
+                carrito.agregarProducto(productos[indice])
+
+                controlPedidos(carrito.carritoPintar())
+            }
+        })
+
+    })
+    if (productosPedido.length == 0) {
         confirmarPedido.disabled = true;
-    }else{
+    } else {
         confirmarPedido.disabled = false;
     }
 }
 
 function controlPedidos(productosPedidos,) {
-    //factura.classList.add('d-none')
-    if(productosPedidos.length == 0){
+    console.log(productosPedidos)
+    if (productosPedidos.length == 0) {
         confirmarPedido.disabled = true;
-     }else{
+    } else {
         confirmarPedido.disabled = false;
     }
-    pedidosVisuales.textContent = ''
-    let controlcarrito = [];
+    pedidosVisuales.textContent = ' '
     let contador = -1;
     let nuevoPedido = ''
     listas = " "
     productosPedidos.forEach(instancia => {
-        let carrito = new Pedido(instancia)
         listas += `<p>${instancia.nombre} = ${instancia.resultado} </p>`
-        controlcarrito.push(carrito)
         contador++
         nuevoPedido = `<div id="${contador}" class="border rounded p-3 mb-3 pedido">
                             <div class="d-flex justify-content-between flex-column">
@@ -261,69 +262,52 @@ function controlPedidos(productosPedidos,) {
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="btn-group">
-                                    <button  class="btn btn-outline-danger menos">
-                                        -
-                                    </button>
-                                    <button  class="btn btn-outline-secondary cantidad">
+                                    <button id="${contador}" class="btn btn-outline-danger menos">-</button>
+                                    <button id="${contador}" class="btn btn-outline-secondary cantidad">
                                         1
                                     </button>
-                                    <button class="btn btn-outline-success mas">
-                                        +
-                                    </button>
+                                    <button id="${contador} "class="btn btn-outline-success mas">+</button>
                                 </div>
                                 <button id="${contador}" class="btn btn-danger eliminar">
                                     Eliminar
                                 </button>
                             </div>`
-    pedidosVisuales.innerHTML += nuevoPedido
+        pedidosVisuales.innerHTML += nuevoPedido
 
     })
     let btnEliminar = document.querySelectorAll('.eliminar')
 
-    // let btnmenos = document.querySelectorAll('.menos')
-    // let btnmas = document.querySelectorAll('.mas')
-    // let btncantidad = document.querySelectorAll('.cantidad')
-    // let sub = document.querySelectorAll('#sub')
-    //let carrito = new Pedido(producto1)
-
     btnEliminar.forEach(btn => {
         btn.addEventListener('click', (event) => {
             let indice = event.target.id
-            productosPedido.splice(indice, 1)
-
-            controlPedidos(productosPedido)
-            console.log('hola')
-        })        
+            carrito.eliminarProducto(indice)
+            controlPedidos(carrito.carritoPintar())
+        })
     })
 
-    let Totales = new Total(controlcarrito)
-    subTotal.textContent = Totales.total
-    iva.textContent = Totales.iva
-    total.textContent = Totales.total
-    //controlTotal(controlcarrito)
-    //console.log('hola')
+    subTotal.textContent = carrito.subtotal()
+    iva.textContent = carrito.calcularIva()
+    total.textContent = carrito.totalProductos()
 
-confirmarPedido.addEventListener('click', (event) => {
-    confirmarPedido.disabled = true;
-    factura.classList.remove('d-none')
-    totalPagado.textContent = `Q ${Totales.total}`
-    lista.innerHTML = listas        
-})    
+    confirmarPedido.addEventListener('click', (event) => {
+        confirmarPedido.disabled = true;
+        factura.classList.remove('d-none')
+        totalPagado.textContent = `Q ${carrito.total}`
+        lista.innerHTML = listas
+        renderizar(productos)
+        pedidosVisuales.textContent = ' '
+    })
+
+    pedidosVisuales.addEventListener('click', (event) => {
+        let indice = event.target.id
+        console.log(indice)
+
+        if(event.target.textContent == "+"){
+            
+            //carrito.productosCarrito[indice].aumentar()
+        }else if(event.target.textContent == "-"){
+            console.log('hola mundo')
+        }
+    })
 }
 
-pedidosVisuales.addEventListener('click', (event) => {
-    console.log(event.target.textContent)
-    if(event.target.textContent == "+"){
-
-    }else if(event.target.textContent == "-"){
-
-    }
-})
-
-
-// function controlTotal(arreglo){
-//     let Totales = new Total(arreglo)
-//     subTotal.textContent = Totales.total
-//     iva.textContent = Totales.iva
-//     total.textContent = Totales.total
-// }
