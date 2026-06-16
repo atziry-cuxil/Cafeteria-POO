@@ -25,10 +25,9 @@
                 <div class="card shadow-sm">
                     <div class="card-header bg-dark text-white h-25">
                         <h4 class="mb-0">Menú de Productos</h4>
-
-
                     </div>
-                    <select id="opciones" class="form-select form-select-sm w-100 text-center"
+                    <div>
+                    <select id="opciones" class="form-select form-select-sm w-50 text-center"
                         aria-label="Small select example">
                         <option value="1" selected>Open this select menu</option>
                         <option value="1">Todas</option>
@@ -37,6 +36,8 @@
                         <option value="4">Postres</option>
                         <option value="5">Comida</option>
                     </select>
+                    <input id="input" class="w-50" type="text" placeholder="Busqueda de alimentos y bebidas">                        
+                    </div>
                     <div class="card-body">
                         <div id="contenedorProductos" class="row g-3">
                             <!-- Producto -->
@@ -65,7 +66,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal:</span>
-                            <strong id="SubTodo">$9.50</strong>
+                            <strong id="SubTotal">$9.50</strong>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>IVA (12%):</span>
@@ -81,20 +82,21 @@
                         </button>
                     </div>
                 </div>
-                <div class="card shadow-sm mt-3">
+                <!--nota final-->
+                <div id="final" class="card shadow-sm mt-3 d-none">
                     <div class="card-header bg-dark text-white">
                         <h4 class="mb-0">Pedido Finalizado</h4>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Productos:</span>
-                            <p>
+                            <div id="lista">
 
-                            </p>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between flex-column mb-2">
                             <span>Total pagado:</span>
-                            <strong id="iva">$1.14</strong>
+                            <strong id="TotalPagado">$1.14</strong>
                             <p> 
                                 <strong>Gracias por su compra</strong>
                             </p>

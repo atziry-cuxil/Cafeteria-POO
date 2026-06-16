@@ -34,7 +34,6 @@ class Producto {
 }
 
 //Podria crearse la clase tienda 
-//Podria crearse la clase totales.
 
 class Pedido {
     //#producto;
@@ -64,7 +63,7 @@ class Pedido {
     restar() {
         if (this.contador != 0) {
             this.#resultado = this.#resultado - this.#precio;
-        } else {
+        }else{
             this.#resultado = 0
         }
         return this.#resultado
@@ -87,6 +86,12 @@ class Pedido {
     }
 }
 
+// class Totales {
+//     constructor(){
+
+//     }
+// }
+
 let producto1 = new Producto("Café Americano", 12, 'Bebida caliente', 'Cafe negro tradicional', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn8ZP8CVkVsfh1js6RyGlG9XSm3ln_jZxCQQ&s')
 let producto2 = new Producto('Cafe Latte', 10, 'Bebida caliente', 'Cafe con leche espumada', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwgW1tj5A9REAeaFZBs8NVRY8UN64rlDPgdQ&s')
 let producto3 = new Producto('Frappe de Chocolate', 25, 'Bebida fria', 'Bebida fria con chocolate y crema', 'https://images.aws.nestle.recipes/original/2024_10_28T11_04_59_badun_images.badun.es_82c0d9edbe53_frapuccino_de_chocolate.jpg')
@@ -98,33 +103,13 @@ let producto8 = new Producto('Bagel con Queso', 20, 'Comida', 'Bagel tostado con
 
 let contenedorProductos = document.querySelector('#contenedorProductos')
 let select = document.querySelector('#opciones')
-let pedidosVisuales = document.querySelector('#pedidosVisuales')
 
 let productos = [];
-let productosPedido = [];
 let htmlProducto = ''
 let contador = -1;
-productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)
 
-select.addEventListener('change', (event) => {
-    let pintar = [];
-    if(event.target.value == "1"){
-        pintar = productos
-    }else if(event.target.value == "2"){
-    pintar = productos.filter(producto => producto.categoria == "Bebida caliente")
+productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)//podria ser un clase tienda.
 
-    }else if(event.target.value == "3"){
-        pintar = productos.filter(producto => producto.categoria == 'Bebida fria')
-    }else if(event.target.value == "4"){
-        pintar = productos.filter(producto => producto.categoria == "Postre")
-    }else{
-        pintar = productos.filter(producto => producto.categoria == "Comida")
-    }
-    renderizar(pintar)
-})
-
-function renderizar(productos){
-    contador = -1;
 productos.forEach(object => {
     contador++
     htmlProducto += `<div id="${contador}" class="col-md-6 hola">
@@ -148,95 +133,138 @@ productos.forEach(object => {
                     </div>
                 </div>`
 })
-contenedorProductos.innerHTML = htmlProducto    
+contenedorProductos.innerHTML = htmlProducto
+let divs = document.querySelectorAll('.hola')
+
+select.addEventListener('change', (event) => {
+
+    contenedorProductos.innerHTML = ""
+    if (event.target.value == "1") {
+        contenedorProductos.innerHTML = htmlProducto
+    } else if (event.target.value == "2") {
+        contenedorProductos.appendChild(divs[0])
+        contenedorProductos.append(divs[1])
+    } else if (event.target.value == "3") {
+        contenedorProductos.appendChild(divs[2])
+        contenedorProductos.append(divs[3])
+    } else if (event.target.value == "4") {
+        contenedorProductos.appendChild(divs[4])
+        contenedorProductos.append(divs[5])
+    } else {
+        contenedorProductos.appendChild(divs[6])
+        contenedorProductos.append(divs[7])
+    }
+})//Podria filtrar con forEach y la categoria
+
 let botonesAgregar = document.querySelectorAll('.btn')
+let pedidosVisuales = document.querySelector('#pedidosVisuales')
+
+let subTotal = document.querySelector('#SubTodo')
+let iva = document.querySelector('#iva')
+let total = document.querySelector('#Total')
+let confirmarPedido = document.querySelector('confirmar')
+
+let nuevoPedido = ''
+let productosPedidos = [];
 
 botonesAgregar.forEach(btn => {
     btn.addEventListener('click', (event) => {
-        if (!productosPedido.includes(productos[event.target.id])) {
-            productosPedido.push(productos[event.target.id])
-            controlPedidos(productosPedido)
-        }
-    })
-})
+        let pedidoActual = new Pedido(productos[event.target.id])//Numero que indica el indice
+        nuevoPedido = ''
+        let temporal = event.target.id
+        //renderizar(pedidoActual,event.target.id)
 
-}
-
-function controlPedidos(productosPedidos,) {
-    pedidosVisuales.textContent = ''
-    let controlcarrito = [];
-    let contador = -1;
-    let nuevoPedido = ''
-    productosPedidos.forEach(instancia => {
-        let carrito = new Pedido(object)
-        controlcarrito.push(carrito)
-        contador++
-        nuevoPedido = `<div id="${contador}" class="border rounded p-3 mb-3 pedido">
+        nuevoPedido = `<div id="${temporal}" class="border rounded p-3 mb-3 pedido">
                             <div class="d-flex justify-content-between flex-column">
-                                <h6 name="name"> ${instancia.nombre}</h6>
-                                <span id="sub">Precio Unitario:${instancia.precio}  00</span>
-                                <span>Subtotal: </span>
+                                <h6 name="name">${pedidoActual.producto.nombre}</h6>
+                                <span>Precio Unitario: Q${pedidoActual.precio}. 00</span>
+                                <span id='sub${temporal}sub'>Subtotal: </span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div class="btn-group">
-                                    <button  class="btn btn-outline-danger menos">
+                                <div class="btn-group ">
+                                    <button id="menos${temporal}menos"  class="btn btn-outline-danger menos">
                                         -
                                     </button>
-                                    <button  class="btn btn-outline-secondary cantidad">
+                                    <button id="c${temporal}cantidad" class="btn btn-outline-secondary cantidad">
                                         1
                                     </button>
-                                    <button class="btn btn-outline-success mas">
+                                    <button id="mas${temporal}mas" class="btn btn-outline-success mas">
                                         +
                                     </button>
                                 </div>
-                                <button id="${contador}" class="btn btn-danger eliminar">
+                                <button id="${temporal}" class="btn btn-danger eliminar">
                                     Eliminar
                                 </button>
                             </div>`
 
-    })
+        if (!productosPedidos.includes(nuevoPedido)) {
+            productosPedidos.push(nuevoPedido)
+            pedidosVisuales.innerHTML += nuevoPedido
+        }
 
-    pedidosVisuales.innerHTML += nuevoPedido
+        let btnMenos = document.querySelector(`#menos${temporal}menos`)
+        let btnMas = document.querySelector(`#mas${temporal}mas`)
+        let btnCantidadVisual = document.querySelector(`#c${temporal}cantidad`)
+        let btnEliminar = document.querySelector(`.eliminar`)
+        let sub = document.querySelector(`#sub${temporal}sub`)
+        sub.textContent = `Subtotal: ${pedidoActual.resultado}`
 
-    let btnmenos = document.querySelectorAll('.menos')
-    let btnmas = document.querySelectorAll('.mas')
-    let btncantidad = document.querySelectorAll('.cantidad')
-    let btnEliminar = document.querySelectorAll('.eliminar')
-    let sub = document.querySelectorAll('#sub')
-    let carrito = new Pedido(producto1)
-
-    for(let i = 0; i < btnmenos.length; i++){
-        btnmenos[i].addEventListener('click', (event) => {
-                 console.log('menos')
-                controlcarrito[i].disminuir()
-                btncantidad[i].textContent = controlcarrito[i].contador  
-                sub[i].textContent = `Subtotal: ${controlcarrito[i].restar()}`        
-        })
-        btnmas.addEventListener('click', (event) => {
-            console.log('mas')
-            controlcarrito[i].aumentar()
-            btncantidad[i].textContent = controlcarrito[i].contador
-            sub[i].textContent = `Subtotal: ${controlcarrito[i].sumar()}`
+        btnMas.addEventListener('click', (event) => {
+            pedidoActual.aumentar()
+            btnCantidadVisual.textContent = pedidoActual.contador
+            sub.textContent = `Subtotal: ${pedidoActual.sumar()}`
         })
 
-        btnEliminar[i].addEventListener('click', (event) => {
-            let indice = event.target.id
-            console.log(event.target.id)
-            productosPedido.splice(indice, 1)
-            controlPedidos(productosPedido)
+        btnMenos.addEventListener('click', (event) => {
+            pedidoActual.disminuir()
+            btnCantidadVisual.textContent = pedidoActual.contador
+            sub.textContent = `Subtotal: ${pedidoActual.restar()}`
+        })
+
+        btnEliminar.addEventListener('click', (event) => {
+            pedidoActual.eliminar()
             console.log('hola')
+            console.log(pedidoActual.contador)
+            console.log(pedidoActual.resultado)
         })
-    }
-
-}
-
-
+        //aplica revision despues de eliminar
+    })
+})
 
 
 
+    // btnmenos.forEach(menos => {
+    //     btncantidad.forEach(cantidad => {
+    //         menos.addEventListener('click', (event) => {
+    //             console.log('menos')
+    //             carrito.disminuir()
+    //             cantidad.textContent = carrito.contador
+    //             console.log(cantidad.textContent)
+    //             console.log(carrito.contador)
+    //         })
+    //     })
+    // })
 
+    // btnmas.forEach(mas => {
+    //     btncantidad.forEach(cantidad => {
+    //     mas.addEventListener('click', (event) => {
+    //         console.log('mas')
+    //         carrito.aumentar()
+    //         cantidad.textContent = carrito.contador
+    //     })            
+    //     })
 
+    // })
 
+    // btnEliminar.forEach(btn => {
+    //     btn.addEventListener('click', (event) => {
+    //         let indice = event.target.id
+    //         console.log(event.target.id)
+    //         productosPedido.splice(indice, 1)
+    //         controlPedidos(productosPedido)
+    //         console.log('hola')
+    //     })
+    // })
 
 
 
