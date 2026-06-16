@@ -101,12 +101,12 @@ let producto6 = new Producto('Cheesecake', 20, 'Postre', 'Pastel frio de queso',
 let producto7 = new Producto('Sandwich de Pollo', 30, 'Comida', 'Sandwich de Pollo', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUd4qbDF_S2hTJp2PoD2qNcXOHszaLpbcFKg&s')
 let producto8 = new Producto('Bagel con Queso', 20, 'Comida', 'Bagel tostado con queso crema', 'https://images.freeimages.com/images/premium/previews/2234/22348026-bagel-with-cream-cheese.jpg')
 
+let contenedorProductos = document.querySelector('#contenedorProductos')
+let select = document.querySelector('#opciones')
+
 let productos = [];
 let htmlProducto = ''
 let contador = -1;
-
-let contenedorProductos = document.querySelector('#contenedorProductos')
-let select = document.querySelector('#opciones')
 
 productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)//podria ser un clase tienda.
 
@@ -233,7 +233,38 @@ botonesAgregar.forEach(btn => {
 
 
 
+    // btnmenos.forEach(menos => {
+    //     btncantidad.forEach(cantidad => {
+    //         menos.addEventListener('click', (event) => {
+    //             console.log('menos')
+    //             carrito.disminuir()
+    //             cantidad.textContent = carrito.contador
+    //             console.log(cantidad.textContent)
+    //             console.log(carrito.contador)
+    //         })
+    //     })
+    // })
 
+    // btnmas.forEach(mas => {
+    //     btncantidad.forEach(cantidad => {
+    //     mas.addEventListener('click', (event) => {
+    //         console.log('mas')
+    //         carrito.aumentar()
+    //         cantidad.textContent = carrito.contador
+    //     })            
+    //     })
+
+    // })
+
+    // btnEliminar.forEach(btn => {
+    //     btn.addEventListener('click', (event) => {
+    //         let indice = event.target.id
+    //         console.log(event.target.id)
+    //         productosPedido.splice(indice, 1)
+    //         controlPedidos(productosPedido)
+    //         console.log('hola')
+    //     })
+    // })
 
 
 

@@ -101,10 +101,30 @@ let select = document.querySelector('#opciones')
 let pedidosVisuales = document.querySelector('#pedidosVisuales')
 
 let productos = [];
+let productosPedido = [];
 let htmlProducto = ''
 let contador = -1;
-
 productos.push(producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8)
+
+select.addEventListener('change', (event) => {
+    let pintar = [];
+    if(event.target.value == "1"){
+        pintar = productos
+    }else if(event.target.value == "2"){
+    pintar = productos.filter(producto => producto.categoria == "Bebida caliente")
+
+    }else if(event.target.value == "3"){
+        pintar = productos.filter(producto => producto.categoria == 'Bebida fria')
+    }else if(event.target.value == "4"){
+        pintar = productos.filter(producto => producto.categoria == "Postre")
+    }else{
+        pintar = productos.filter(producto => producto.categoria == "Comida")
+    }
+    renderizar(pintar)
+})
+
+function renderizar(productos){
+    contador = -1;
 productos.forEach(object => {
     contador++
     htmlProducto += `<div id="${contador}" class="col-md-6 hola">
@@ -128,9 +148,8 @@ productos.forEach(object => {
                     </div>
                 </div>`
 })
-contenedorProductos.innerHTML = htmlProducto
+contenedorProductos.innerHTML = htmlProducto    
 let botonesAgregar = document.querySelectorAll('.btn')
-let productosPedido = [];
 
 botonesAgregar.forEach(btn => {
     btn.addEventListener('click', (event) => {
@@ -141,11 +160,16 @@ botonesAgregar.forEach(btn => {
     })
 })
 
+}
+
 function controlPedidos(productosPedidos,) {
     pedidosVisuales.textContent = ''
+    let controlcarrito = [];
     let contador = -1;
     let nuevoPedido = ''
     productosPedidos.forEach(instancia => {
+        let carrito = new Pedido(object)
+        controlcarrito.push(carrito)
         contador++
         nuevoPedido = `<div id="${contador}" class="border rounded p-3 mb-3 pedido">
                             <div class="d-flex justify-content-between flex-column">
@@ -181,49 +205,28 @@ function controlPedidos(productosPedidos,) {
     let sub = document.querySelectorAll('#sub')
     let carrito = new Pedido(producto1)
 
-
     for(let i = 0; i < btnmenos.length; i++){
         btnmenos[i].addEventListener('click', (event) => {
                  console.log('menos')
-                carrito.disminuir()
-                btncantidad[i].textContent = carrito.contador  
-                sub[i].textContent = `Subtotal: ${carrito.restar}`        
+                controlcarrito[i].disminuir()
+                btncantidad[i].textContent = controlcarrito[i].contador  
+                sub[i].textContent = `Subtotal: ${controlcarrito[i].restar()}`        
         })
-
-    }
-
-    // btnmenos.forEach(menos => {
-    //     btncantidad.forEach(cantidad => {
-    //         menos.addEventListener('click', (event) => {
-    //             console.log('menos')
-    //             carrito.disminuir()
-    //             cantidad.textContent = carrito.contador
-    //             console.log(cantidad.textContent)
-    //             console.log(carrito.contador)
-    //         })
-    //     })
-    // })
-
-    btnmas.forEach(mas => {
-        btncantidad.forEach(cantidad => {
-        mas.addEventListener('click', (event) => {
+        btnmas.addEventListener('click', (event) => {
             console.log('mas')
-            carrito.aumentar()
-            cantidad.textContent = carrito.contador
-        })            
+            controlcarrito[i].aumentar()
+            btncantidad[i].textContent = controlcarrito[i].contador
+            sub[i].textContent = `Subtotal: ${controlcarrito[i].sumar()}`
         })
 
-    })
-
-    btnEliminar.forEach(btn => {
-        btn.addEventListener('click', (event) => {
+        btnEliminar[i].addEventListener('click', (event) => {
             let indice = event.target.id
             console.log(event.target.id)
             productosPedido.splice(indice, 1)
             controlPedidos(productosPedido)
             console.log('hola')
         })
-    })
+    }
 
 }
 
