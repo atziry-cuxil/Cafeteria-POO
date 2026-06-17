@@ -228,7 +228,7 @@ function renderizar(productospintar) {
                                 <span class="fw-bold text-success">
                                     Q.${object.precio}
                                 </span>
-                                <button id="${contador}" class="btn btn-dark agregar">
+                                <button name="${object.nombre}" id="${contador}" class="btn btn-dark agregar">
                                     Agregar
                                 </button>
                             </div>
@@ -241,14 +241,13 @@ function renderizar(productospintar) {
 
     botonesAgregar.forEach(btn => {
         btn.addEventListener('click', (event) => {
-            let indice = parseInt(event.target.id)
-            let temporal = porducto.findIndex(porducto => producto.id == indice)
+            let name = event.target.name
+            let temporal = productos.find(producto => producto.nombre == name)
             if (!carrito.productosCarrito.includes(temporal)) {
-                //productos[indice].limpiarProducto()
-                carrito.agregarProducto(productos[indice])
+                carrito.agregarProducto(temporal)
                 controlPedidos(carrito.carritoPintar())
             } else {
-                let temporal2 = carrito.productosCarrito.findIndex(producto => producto.nombre == productos[indice].nombre)
+                let temporal2 = carrito.productosCarrito.findIndex(producto => producto == temporal)
                 carrito.productosCarrito[temporal2].aumentarCantidad()
                 carrito.productosCarrito[temporal2].sumarSubtotal()
                 controlPedidos(carrito.carritoPintar())
